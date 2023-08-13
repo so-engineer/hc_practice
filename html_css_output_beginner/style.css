@@ -43,11 +43,14 @@ body {
     margin: 10px 20px;
 }
 
-.top-image img {
-    /*親要素を超えて全幅表示*/
-    margin-left: calc(50% - 50vw); 
-    margin-right: calc(50% - 50vw);
-    width: 100vw;
+.top-image {
+    background-image: url(images/1920x1280.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin-left: calc(50% - 50vw); /*親要素を超えて全幅表示*/
+    margin-right: calc(50% - 50vw); /*親要素を超えて全幅表示*/
+    width: 100vw; /* viewportの横幅に対する割合*/
     height: 600px;
     margin-bottom: 50px;
 }
