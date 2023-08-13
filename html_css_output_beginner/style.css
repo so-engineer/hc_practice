@@ -8,10 +8,8 @@ body {
 .container {
     display: grid;
     margin: 0 auto;
-    /* レスポンシブ対応 */
-    max-width: 960px;
-    /* 中央揃えにするためにcontainer自体の幅を指定する */
-    width: 80%;
+    max-width: 960px; /* レスポンシブ対応 */
+    width: 80%; /* 中央揃えにするためにcontainer自体の幅を指定する */
     grid-template-columns: 1fr;
     padding: 0 4%;
     /* background-color: red; */
@@ -55,17 +53,17 @@ body {
     margin-bottom: 50px;
 }
 
-.title {
-    margin: 0 auto;
+section h2 {
+    /* margin: 0 auto; */
     text-decoration: underline;
+    text-align: center;
     margin-bottom: 50px;
     font-size: 30px;
     /* background-color: aqua; */
 }
 
 .introduce {
-    /* 【質問】PCの場合margin: 0 autoをすると幅960pxよりもborderが内側に来て結果的に中央に寄るのはなぜか？ */
-    margin: 0 auto;
+    /* margin: 0 auto; */
     margin-bottom: 70px;
     /* background-color: aqua; */
 }
@@ -76,16 +74,14 @@ h3 {
 }
 
 p {
-    /* %付けない方が設定しやすい */
-    line-height: 1.7;
+    line-height: 1.7; /* %付けない方が設定しやすい */
 }
 
 .face-image img {
     border-radius: 50%;
     width: 26.66%;
     margin: 0 auto;
-    /* imgはインライン要素のためブロック要素に変えてmarginをする */
-    display: block;
+    display: block; /* imgはインライン要素のためブロック要素に変えてmarginをする */
 }
 
 .profile-images {
@@ -94,8 +90,6 @@ p {
 }
 
 .profile img {
-    /* 【質問】widthを400px以上にすると左のborderからははみ出さず右のborderからはみ出すのははぜか？ */
-    /* width: 400px; */
     width: 93.33%;
     margin: 0 auto;
     display: block;
