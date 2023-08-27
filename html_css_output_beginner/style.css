@@ -1,0 +1,130 @@
+@charset "utf-8";
+/* スマートフォン及び共通設定 */
+
+body {
+    width: 100%;
+}
+
+.container {
+    display: grid;
+    margin: 0 auto;
+    max-width: 960px; /* レスポンシブ対応 */
+    width: 80%; /* 中央揃えにするためにcontainer自体の幅を指定する */
+    grid-template-columns: 1fr;
+    padding: 0 4%;
+    /* background-color: red; */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 2.66%;
+    /* background-color: aqua; */
+}
+
+.header h2 {
+    background-color: black;
+    color: white;
+    padding: 10px 2.66%;
+    margin-left: 2.66%;
+}
+
+.header ul {
+    display: flex;
+    list-style-type: none;
+    justify-content: space-between;
+}
+
+.header ul li {
+    /* 【質問】スマホのwidthを375pxとした場合20pxを375pxで割り5.33%とすると二行になってレイアウトが崩れるのはなぜか？ */
+    /* margin: 10px 5.33%; */
+    margin: 10px 20px;
+}
+
+.top-image {
+    background-image: url(images/1920x1280.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin-left: calc(50% - 50vw); /*親要素を超えて全幅表示*/
+    margin-right: calc(50% - 50vw); /*親要素を超えて全幅表示*/
+    width: 100vw; /* viewportの横幅に対する割合*/
+    height: 600px;
+    margin-bottom: 50px;
+}
+
+section h2 {
+    /* margin: 0 auto; */
+    text-decoration: underline;
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 30px;
+    /* background-color: aqua; */
+}
+
+.introduce {
+    /* margin: 0 auto; */
+    margin-bottom: 70px;
+    /* background-color: aqua; */
+}
+
+h3 {
+    margin: 10px 0;
+    text-align: center;
+}
+
+p {
+    line-height: 1.7; /* %付けない方が設定しやすい */
+}
+
+.face-image img {
+    border-radius: 50%;
+    width: 26.66%;
+    margin: 0 auto;
+    display: block; /* imgはインライン要素のためブロック要素に変えてmarginをする */
+}
+
+.profile-images {
+    margin-bottom: 70px;
+    /* background-color: aqua; */
+}
+
+.profile img {
+    width: 93.33%;
+    margin: 0 auto;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.profile p {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.footer {
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+
+
+/* PCの設定 */
+@media screen and (min-width:600px) {
+    .introduce {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 10.41%;
+    }
+
+    .introduce h3 {
+        text-align: left;
+    }
+
+    .face-image img {
+        width: 60%;
+    }
+
+    .profile-images {
+        display: flex;
+        justify-content: space-between;
+    }
+}
