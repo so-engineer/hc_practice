@@ -8,6 +8,8 @@ class Suica
     @deposit = 500
   end
 
+  # private # 残高を外部から書き換えられないようにする
+
   def charge_in(value)
     raise '無効なチャージ金額です' if value < 100
 
@@ -46,6 +48,8 @@ class Buy
     @juice = Juice.new
     @sales = 0
   end
+
+  # private # 売上を外部から書き換えられないようにする
 
   def purchase(kind, number)
     buy_price = @juice.drink[kind] * number
