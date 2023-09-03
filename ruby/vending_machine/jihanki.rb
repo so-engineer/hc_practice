@@ -3,84 +3,99 @@
 # Suica
 class Suica
   attr_reader :deposit
+  attr_writer :deposit
 
   def initialize
     @deposit = 500
   end
 
-  # private # 残高を外部から書き換えられないようにする
-
-  def charge_in(value)
+  # チャージする
+  def charge(value)
     raise '無効なチャージ金額です' if value < 100
 
     @deposit += value
   end
-
-  def charge_out(value)
-    @deposit -= value
-  end
 end
 
 # ジュースの管理
-class Juice
-  attr_reader :drink, :drink_count
+class Drink
+  attr_reader :name, :price, :count
+  attr_writer :count
 
-  def initialize
-    @drink = { pepsi: 150, monster: 230, irohasu: 120 }
-    @drink_count = { pepsi: 5, monster: 5, irohasu: 5 }
-  end
-
-  def zaiko_in(kind, number)
-    @drink_count[kind] += number
-  end
-
-  def zaiko_out(kind, number)
-    @drink_count[kind] -= number
+  def initialize(name, price, count)
+    @name = name
+    @price = price
+    @count = count
   end
 end
 
 # 購入処理
-class Buy
-  attr_reader :suica, :juice, :sales
+class Jihanki
+  attr_reader :suica, :drink, :sales
 
   def initialize
     @suica = Suica.new
-    @juice = Juice.new
+    @drink1 = Drink.new(:pepsi, 150, 5)
+    @drink2 = Drink.new(:monster, 230, 5)
+    @drink3 = Drink.new(:irohasu, 120, 5)
+    @drinks = [@drink1, @drink2, @drink3]
     @sales = 0
   end
 
-  # private # 売上を外部から書き換えられないようにする
-
-  def purchase(kind, number)
-    buy_price = @juice.drink[kind] * number
-    # ジュース値段以上のチャージ残高がある条件下
-    if buy_price <= @suica.deposit
-      @juice.zaiko_out(kind, number)
-      @sales += buy_price
-      @suica.charge_out(buy_price)
-    elsif buy_price > @suica.deposit || number > @juice.drink_count[kind]
-      raise "チャージ残高が足りない、もしくは在庫がありません。チャージ残高:#{@suica.deposit} 在庫:#{@juice.drink_count[kind]}"
-    end
-  end
-
+  # 購入可能なドリンクのリスト
   def purchase_availval_list
     dirink_availval_list = []
-    @juice.drink.each do |k, v|
-      dirink_availval_list << k if v <= @suica.deposit && @juice.drink_count[k] > 1
+    @drinks.each do |drink|
+      dirink_availval_list << drink.name if drink.price <= @suica.deposit && drink.count >= 1
     end
 
     dirink_availval_list
   end
+
+  # 在庫の一覧
+  def zaiko_list
+    zaiko_list = []
+    @drinks.each do |drink|
+      zaiko_list << "#{drink.name}:#{drink.count}"
+    end
+
+    zaiko_list
+  end
+
+  # 在庫を補充
+  def add_zaiko(kind, value)
+    @drinks.each do |drink|
+      drink.count += value if kind == drink.name
+    end
+  end
+
+  # 購入処理
+  def purchase(kind, number)
+    target_drink = nil
+    @drinks.each do |drink|
+      target_drink = drink if kind == drink.name
+    end
+    buy_price = target_drink.price * number
+    # ジュース値段以上のチャージ残高がある条件下
+    if buy_price <= @suica.deposit
+      target_drink.count -= number
+      @sales += buy_price
+      @suica.deposit -= buy_price
+    elsif buy_price > @suica.deposit || number > target_drink.count
+      raise "チャージ残高が足りない、もしくは在庫がありません。チャージ残高:#{@suica.deposit} 在庫:#{target_drink.count}"
+    end
+  end
 end
 
-buy = Buy.new
-buy.purchase(:pepsi, 3)
+jihanki = Jihanki.new
+# 購入処理
+jihanki.purchase(:pepsi, 3)
 # 任意の金額をチャージ
-buy.suica.charge_in(100)
+jihanki.suica.charge(100)
 # 在庫を補充
-buy.juice.zaiko_in(:irohasu, 5)
+jihanki.add_zaiko(:irohasu, 5)
 
-p "現在のチャージ残高:#{buy.suica.deposit}"
-p "在庫:#{buy.juice.drink_count}"
-p "現在の売上金額:#{buy.sales}"
-p "購入可能なドリンクのリスト:#{buy.purchase_availval_list}"
+p "現在のチャージ残高:#{jihanki.suica.deposit}"
+p "在庫:#{jihanki.zaiko_list}"
+p "現在の売上金額:#{jihanki.sales}"
+p "購入可能なドリンクのリスト:#{jihanki.purchase_availval_list}"
