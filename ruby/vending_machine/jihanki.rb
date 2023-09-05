@@ -19,83 +19,123 @@ end
 
 # ジュースの管理
 class Drink
-  attr_reader :name, :price, :count
-  attr_writer :count
+  attr_reader :name, :price
 
-  def initialize(name, price, count)
+  def initialize(name, price)
     @name = name
     @price = price
-    @count = count
   end
 end
 
 # 購入処理
 class Jihanki
-  attr_reader :suica, :drink, :sales
+  attr_reader :drinks, :sales
 
   def initialize
-    @suica = Suica.new
-    @drink1 = Drink.new(:pepsi, 150, 5)
-    @drink2 = Drink.new(:monster, 230, 5)
-    @drink3 = Drink.new(:irohasu, 120, 5)
-    @drinks = [@drink1, @drink2, @drink3]
+    drinks1 = (1..5).to_a.map { Drink.new(:pepsi, 150) }
+    drinks2 = (1..5).to_a.map { Drink.new(:monster, 230) }
+    drinks3 = (1..5).to_a.map { Drink.new(:irohasu, 120) }
+    @drinks = [drinks1, drinks2, drinks3]
     @sales = 0
   end
 
-  # 購入可能なドリンクのリスト
-  def purchase_availval_list
-    dirink_availval_list = []
-    @drinks.each do |drink|
-      dirink_availval_list << drink.name if drink.price <= @suica.deposit && drink.count >= 1
-    end
-
-    dirink_availval_list
+  # チャージを参照
+  def ref_charge(suica)
+    suica.deposit
   end
 
-  # 在庫の一覧
-  def zaiko_list
-    zaiko_list = []
-    @drinks.each do |drink|
-      zaiko_list << "#{drink.name}:#{drink.count}"
-    end
+  # チャージを減らす
+  def minus_charge(suica, value)
+    suica.deposit -= value
+  end
 
-    zaiko_list
+  # 在庫を参照
+  def ref_zaiko
+    @drinks.map do |i|
+      "#{i[0].name}:#{i.size}" if i.count >= 1
+    end
   end
 
   # 在庫を補充
-  def add_zaiko(kind, value)
-    @drinks.each do |drink|
-      drink.count += value if kind == drink.name
+  def add_zaiko(drink)
+    target_drink = nil
+    @drinks.each do |i|
+      target_drink = i if drink.name == i[0].name
     end
+
+    target_drink << drink
+  end
+
+  # 購入可能なドリンクのリスト
+  def purchase_availval_list(suica)
+    dirink_availval_list = []
+    @drinks.each do |i|
+      dirink_availval_list << i[0].name if i.count >= 1 && i[0].price <= ref_charge(suica)
+    end
+    dirink_availval_list
   end
 
   # 購入処理
-  def purchase(kind, number)
+  def purchase(suica, drink)
     target_drink = nil
-    @drinks.each do |drink|
-      target_drink = drink if kind == drink.name
+    @drinks.each do |i|
+      target_drink = i if drink.name == i[0].name
     end
-    buy_price = target_drink.price * number
-    # ジュース値段以上のチャージ残高がある条件下
-    if buy_price <= @suica.deposit
-      target_drink.count -= number
-      @sales += buy_price
-      @suica.deposit -= buy_price
-    elsif buy_price > @suica.deposit || number > target_drink.count
-      raise "チャージ残高が足りない、もしくは在庫がありません。チャージ残高:#{@suica.deposit} 在庫:#{target_drink.count}"
+    if target_drink[0].price > ref_charge(suica) || target_drink.empty?
+      raise 'チャージ残高が足りない、もしくは在庫がありません。'
+    else
+      @sales += target_drink[0].price
+      minus_charge(suica, target_drink[0].price)
+      target_drink.delete_at(-1)
     end
   end
 end
 
+suica = Suica.new
 jihanki = Jihanki.new
-# 購入処理
-jihanki.purchase(:pepsi, 3)
+drink = Drink.new(:pepsi, 150)
+# チャージを参照
+p "チャージ残高:#{jihanki.ref_charge(suica)}"
 # 任意の金額をチャージ
-jihanki.suica.charge(100)
+suica.charge(1000)
+p "チャージ残高:#{jihanki.ref_charge(suica)}←任意の金額をチャージ"
+# 在庫を参照
+p "在庫:#{jihanki.ref_zaiko}"
 # 在庫を補充
-jihanki.add_zaiko(:irohasu, 5)
-
-p "現在のチャージ残高:#{jihanki.suica.deposit}"
-p "在庫:#{jihanki.zaiko_list}"
-p "現在の売上金額:#{jihanki.sales}"
-p "購入可能なドリンクのリスト:#{jihanki.purchase_availval_list}"
+jihanki.add_zaiko(drink)
+p "在庫:#{jihanki.ref_zaiko}←在庫を補充"
+# 購入処理
+jihanki.purchase(suica, drink)
+p 'pepsiを購入----------------------------------------------------------'
+p "在庫:#{jihanki.ref_zaiko}"
+p "売上金額:#{jihanki.sales}"
+p "チャージ残高:#{jihanki.ref_charge(suica)}"
+p "購入可能なドリンクのリスト:#{jihanki.purchase_availval_list(suica)}"
+p 'monsterを購入--------------------------------------------------------'
+drink = Drink.new(:monster, 230)
+jihanki.purchase(suica, drink)
+p "在庫:#{jihanki.ref_zaiko}"
+p "売上金額:#{jihanki.sales}"
+p "チャージ残高:#{jihanki.ref_charge(suica)}"
+p "購入可能なドリンクのリスト:#{jihanki.purchase_availval_list(suica)}"
+p 'irohasuを購入--------------------------------------------------------'
+drink = Drink.new(:irohasu, 120)
+jihanki.purchase(suica, drink)
+p "在庫:#{jihanki.ref_zaiko}"
+p "売上金額:#{jihanki.sales}"
+p "チャージ残高:#{jihanki.ref_charge(suica)}"
+p "購入可能なドリンクのリスト:#{jihanki.purchase_availval_list(suica)}"
+p 'irohasuを0本になるまで購入---------------------------------------------'
+drink = Drink.new(:irohasu, 120)
+jihanki.purchase(suica, drink)
+drink = Drink.new(:irohasu, 120)
+jihanki.purchase(suica, drink)
+drink = Drink.new(:irohasu, 120)
+jihanki.purchase(suica, drink)
+drink = Drink.new(:irohasu, 120)
+jihanki.purchase(suica, drink)
+p "購入可能なドリンクのリスト:#{jihanki.purchase_availval_list(suica)}"
+p "在庫:#{jihanki.ref_zaiko}"
+p "売上金額:#{jihanki.sales}"
+p "チャージ残高:#{jihanki.ref_charge(suica)}"
+p "購入可能なドリンクのリスト:#{jihanki.purchase_availval_list(suica)}"
