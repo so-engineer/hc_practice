@@ -18,7 +18,7 @@
   follow_id {label: "varchar, not null"}
   follower_id {label: "varchar, not null"}
 
-[tweet] {bgcolor: "#d0e0d0"}
+[tweets] {bgcolor: "#d0e0d0"}
   *tweet_id {label: "varchar, not null, FK(users)"}
   tweet {label: "char(140), not null"}
   good {label: "varchar, not null"}
@@ -27,26 +27,26 @@
   created_at {label: "datatime, not null"}
   updated_at {label: "datatime, not null"}
 
-[dm] {bgcolor: "#d0e0d0"}
+[dms] {bgcolor: "#d0e0d0"}
   *dm_id {label: "varchar, not null, FK(users)"}
   dm {label: "varchar, not null"}
   status {label: "varchar, not null"}
   created_at {label: "datatime, not null"}
   updated_at {label: "datatime, not null"}
 
-[bm] {bgcolor: "#d0e0d0"}
+[bms] {bgcolor: "#d0e0d0"}
   *bm_id {label: "varchar, not null, FK(users)"}
   bm {label: "varchar, not null"}
   created_at {label: "datatime, not null"}
   updated_at {label: "datatime, not null"}
 
-[follow] {bgcolor: "#d0e0d0"}
+[follows] {bgcolor: "#d0e0d0"}
   *follow_id {label: "varchar, not null, FK(users)"}
   follow {label: "varchar, not null"}
   created_at {label: "datatime, not null"}
   updated_at {label: "datatime, not null"}
 
-[follower] {bgcolor: "#d0e0d0"}
+[followers] {bgcolor: "#d0e0d0"}
   *follower_id {label: "varchar, not null, FK(users)"}
   follower {label: "varchar, not null"}
   created_at {label: "datatime, not null"}
