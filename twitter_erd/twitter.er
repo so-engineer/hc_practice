@@ -1,0 +1,64 @@
+[users]
+  *id {label: "varchar, not null"}
+  status {label: "varchar, not null"}
+  full_name {label: "varchar, null, uniq"}
+  tel {label: "varchar, not null, uniq"}
+  self_introduction {label: "varchar, not null"}
+  place {label: "varchar, not null"}
+  url {label: "varchar, not null"}
+  birth {label: "varchar, not null"}
+  profile_img {label: "varchar, not null"}
+  abater_img {label: "varchar, not null"}
+  email {label: "varchar, not null, uniq"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+  tweet_id {label: "varchar, not null"}
+  dm_id {label: "varchar, not null"}
+  bm_id {label: "varchar, not null"}
+  follow_id {label: "varchar, not null"}
+  follower_id {label: "varchar, not null"}
+
+[tweet] {bgcolor: "#d0e0d0"}
+  *tweet_id {label: "varchar, not null, FK(users)"}
+  tweet {label: "char(140), not null"}
+  good {label: "varchar, not null"}
+  retweet {label: "varchar, not null"}
+  status {label: "varchar, not null"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+[dm] {bgcolor: "#d0e0d0"}
+  *dm_id {label: "varchar, not null, FK(users)"}
+  dm {label: "varchar, not null"}
+  status {label: "varchar, not null"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+[bm] {bgcolor: "#d0e0d0"}
+  *bm_id {label: "varchar, not null, FK(users)"}
+  bm {label: "varchar, not null"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+[follow] {bgcolor: "#d0e0d0"}
+  *follow_id {label: "varchar, not null, FK(users)"}
+  follow {label: "varchar, not null"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+[follower] {bgcolor: "#d0e0d0"}
+  *follower_id {label: "varchar, not null, FK(users)"}
+  follower {label: "varchar, not null"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+# Cardinality    Syntax
+# 0 or 1         ?
+# exactly 1      1
+# 0 or more      *
+# 1 or more      +
+users 1--* `tweet`
+users 1--* `dm`
+users 1--* `bm`
+users 1--* `follow`
+users 1--* `follower`
