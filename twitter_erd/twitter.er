@@ -1,0 +1,74 @@
+[users]
+  *id {label: "varchar, not null, uniq"}
+  status {label: "varchar, not null"}
+  full_name {label: "varchar, null, uniq"}
+  tel {label: "varchar, not null, uniq"}
+  self_introduction {label: "varchar, not null"}
+  place {label: "varchar, not null"}
+  url {label: "varchar, not null"}
+  birth {label: "varchar, not null"}
+  profile_img {label: "varchar, not null"}
+  abater_img {label: "varchar, not null"}
+  email {label: "varchar, not null, uniq"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+[tweets] {bgcolor: "#d0e0d0"}
+  *id {label: "varchar, not null, uniq"}
+  user_id {label: "varchar, not null, FK(users)"}
+  body {label: "char(140), not null"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+[goods] {bgcolor: "#ececfc"}
+  *id {label: "varchar, not null, uniq"}
+  user_id {label: "varchar, not null, FK(users)"}
+  tweet_id {label: "varchar, not null, FK(tweets)"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+[retweets] {bgcolor: "#ececfc"}
+  *id {label: "varchar, not null, uniq"}
+  user_id {label: "varchar, not null, FK(users)"}
+  tweet_id {label: "varchar, not null, FK(tweets)"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+[direct_messages] {bgcolor: "#d0e0d0"}
+  *id {label: "varchar, not null, uniq"}
+  from_user_id {label: "varchar, not null, FK(users)"}
+  to_user_id {label: "varchar, not null, FK(users)"}
+  body {label: "varchar, not null"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+[book_marks] {bgcolor: "#ececfc"}
+  *id {label: "varchar, not null, uniq"}
+  user_id {label: "varchar, not null, FK(users)"}
+  tweet_id {label: "varchar, not null, FK(tweets)"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+[relationships] {bgcolor: "#d0e0d0"}
+  *id {label: "varchar, not null, uniq"}
+  follower_id {label: "varchar, not null, FK(users)"}
+  followed_id {label: "varchar, not null, FK(users)"}
+  created_at {label: "datatime, not null"}
+  updated_at {label: "datatime, not null"}
+
+
+# Cardinality    Syntax
+# 0 or 1         ?
+# exactly 1      1
+# 0 or more      *
+# 1 or more      +
+users 1--* `tweets`
+users 1--* `goods`
+users 1--* `retweets`
+users 1--* `direct_messages`
+users 1--* `book_marks`
+users 1--* `relationships`
+
+tweets 1--* `goods`
+tweets 1--* `retweets`
+tweets 1--* `book_marks`
