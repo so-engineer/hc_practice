@@ -102,3 +102,7 @@ vending.add_stock(input_drink, input_num)
 print(f"現在の在庫：{vending.stock()}")
 print(f"購入可能リスト：{vending.available_list(suica)}")
 
+# 書き込み不可
+# suica.balance = 1000
+# 書き込み可能
+# suica._balance = 1000
