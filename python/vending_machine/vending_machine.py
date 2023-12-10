@@ -6,11 +6,15 @@ class VendingMachine:
         self.drink_monster = [drink.Drink("monster", 150) for _ in range(5)]
         self.drink_irohasu = [drink.Drink("irohasu", 150) for _ in range(5)]
         self.drink_all = [self.drink_pepsi, self.drink_monster, self.drink_irohasu]
-        self._sales = 0
+        self.__sales = 0
 
     @property
     def sales(self):
-        return self._sales
+        return self.__sales
+    
+    @sales.setter
+    def sales(self, value):
+        self.__sales = value
 
     def target_drink(self, drink: object):
         for i in self.drink_all:
@@ -26,7 +30,7 @@ class VendingMachine:
         for _ in range(num):
             self.target_drink(drink).pop()
 
-        self._sales += int(drink.price) * num
+        self.__sales += int(drink.price) * num
 
         suica.balance -= int(drink.price) * num
         if suica.balance < 0:
