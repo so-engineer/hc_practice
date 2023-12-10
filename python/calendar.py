@@ -4,8 +4,9 @@ import sys
 
 
 # 今年・今月の設定
-current_year = datetime.date.today().year
-current_month = datetime.date.today().month
+today = datetime.date.today()
+current_year = today.year
+current_month = today.month
 
 # -mオプションの設定
 def parser():
@@ -20,20 +21,12 @@ def parser():
 
 # 当月初のスタート位置を調整
 def start(num):
-    if num == 1:
-        return ""
-    if num == 2:
-        return "    "
-    if num == 3:
-        return "        "
-    if num == 4:
-        return "            "
-    if num == 5:
-        return "                "
-    if num == 6:
-        return "                    "
     if num == 0:
-        return "                        "
+        spaces = " " * 24
+        return spaces
+    
+    spaces = " " * ((num - 1) * 4)
+    return spaces
 
 # メインロジックの実行
 def execute(year=current_year, month=current_month):
@@ -49,8 +42,8 @@ def execute(year=current_year, month=current_month):
     print(y.rjust(5))
 
     # 曜日を表示
-    dict_weekday = {1: "月", 2: "火", 3: "水", 4: "木", 5: "金", 6: "土", 0: "日"}
-    for k, v in dict_weekday.items():
+    DICT_WEEKDAY = {1: "月", 2: "火", 3: "水", 4: "木", 5: "金", 6: "土", 0: "日"}
+    for k, v in DICT_WEEKDAY.items():
         print(v, end="  ")
 
     # 当月初の算定
@@ -69,11 +62,9 @@ def execute(year=current_year, month=current_month):
 
     # 日付を表示
     for day in range(month_first_day.day, month_last_day.day):
+
         # 日付が一桁の場合、二桁に変換
-        if day < 10:
-            day = f"0{day}"
-        else:
-            day = str(day)
+        day = f"{day:02}"
         
         # 当月初のスタート位置を調整
         if day == "01":
